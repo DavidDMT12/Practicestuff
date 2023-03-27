@@ -1,0 +1,10 @@
+{ 
+  "description": "Test1",
+  "external_url": "YOUR URL",
+  "name": "Test1", 
+  "attributes": [
+    {
+      "trait_type": "Test", 
+      "value": "1"
+    }]
+  }

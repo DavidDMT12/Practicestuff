@@ -55,7 +55,7 @@ contract MultiSig {
         return _confirmations;
     }
 
-    function isConfirmed(uint256 _id) public view returns(bool) { 
+    function isConfirmed(uint256 _id) public view returns(bool) { //checks if a transaction has enough signatures to be confirmed
         if (getConfirmationsCount(_id) >= required) {
             return true;
         } else {
@@ -63,9 +63,10 @@ contract MultiSig {
         }
     }
 
-    function addTransaction(address _recipient, uint256 _value, bytes calldata _data) internal returns(uint256) {
-        uint256 _thisTransaction = transactionCount;
+    function addTransaction(address _recipient, uint256 _value, bytes calldata _data) internal returns(uint256) { //adds a new transaction
+        uint256 _thisTransaction = transactionCount; // is base 0
         transactionCount = transactionCount + 1;
+        //sets parameters of transaction
         transactions[_thisTransaction].recipient = _recipient;
         transactions[_thisTransaction].value = _value;
         transactions[_thisTransaction].executed = false;
@@ -75,22 +76,22 @@ contract MultiSig {
 
     }
 
-    function confirmTransaction(uint256 _id) public {
+    function confirmTransaction(uint256 _id) public { //confirms a transaction
         require(isOwner(msg.sender) == true, "Only owners can confirm transactions");
         confirmations[_id][msg.sender] = true;
-        if (isConfirmed(_id) == true) {
+        if (isConfirmed(_id) == true) { // executes the transaction if enough signatures have been accumulated
             executeTransaction(_id);
         }
     }
 
-    function submitTransaction(address _recipient, uint256 _value, bytes calldata _data) external {
+    function submitTransaction(address _recipient, uint256 _value, bytes calldata _data) external { //creates a transaction and signs it
         require(isOwner(msg.sender) == true, "Only owners can confirm transactions");
         uint256 _thisTransaction = addTransaction(_recipient, _value, _data);
         confirmTransaction(_thisTransaction);
     }
 
-    function executeTransaction(uint256 _id) public {
-        require(transactions[_id].executed == false, "transaction has already beed executed");
+    function executeTransaction(uint256 _id) public { //executes a transaction
+        require(transactions[_id].executed == false, "transaction has already beed executed"); // avoids double entry
         require(isConfirmed(_id) == true, "Transaction does not have the amount of signatures to be confirmed");
         require(address(this).balance >= transactions[_id].value, "Insufficient contract balance");
         (bool success, ) = transactions[_id].recipient.call{ value: transactions[_id].value }(transactions[_id].data);

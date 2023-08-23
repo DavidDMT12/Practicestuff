@@ -1,15 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import server from "./server";
-import { createHash } from "crypto"; // Import the crypto module
+import { keccak256 } from "ethereum-cryptography/keccak";
+import secp from "ethereum-cryptography/secp256k1"; // Import the secp module
 
 function Sign({ address, setBalance, privateKey }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [hash, setHash] = useState(""); // State for the hash
+  const [signedMessage, setSignedMessage] = useState("");
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
-  async function transfer(evt) {
+  async function generateSignature(evt) {
     evt.preventDefault();
 
     try {
@@ -22,18 +23,21 @@ function Sign({ address, setBalance, privateKey }) {
       });
       setBalance(balance);
 
-      // Create a hash using private key, recipient, and send amount
-      const hashData = privateKey + recipient + sendAmount;
-      const hashAlgorithm = "sha256"; // You can use a different algorithm if needed
-      const hash = createHash(hashAlgorithm).update(hashData).digest("hex");
-      setHash(hash);
+      // Create a hash using recipient, send amount, and balance
+      const hashData = recipient + sendAmount + balance;
+      const hash = keccak256(hashData).digest("hex");
+
+      // Generate a signature using the private key
+      const signature = secp.sign(hash, privateKey, { recovered: true });
+
+      setSignedMessage(signature); // Update the state with the generated signature
     } catch (ex) {
       alert(ex.response.data.message);
     }
   }
 
   return (
-    <form className="container signer" onSubmit={transfer}>
+    <form className="container signer" onSubmit={signature}>
       <h1>Sign</h1>
 
       <label>
@@ -54,13 +58,13 @@ function Sign({ address, setBalance, privateKey }) {
         ></input>
       </label>
 
-      {/* Display the calculated hash */}
+      {/* Display the calculated signed message */}
       <label>
-        Hash
-        <span>{hash}</span>
+        Signed Message
+        <span>{signedMessage}</span>
       </label>
 
-      <input type="submit" className="button" value="Transfer" />
+      <input type="submit" className="button" value="Signature" />
     </form>
   );
 }

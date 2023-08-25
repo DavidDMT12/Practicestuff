@@ -13,7 +13,7 @@ function getAddress(publicKey) {
 
 function generateKeyPair() {
     const privateKey = secp.secp256k1.utils.randomPrivateKey(); // Generate a random private key
-    const publicKey = secp.secp256k1.getPublicKey(privateKey, false); // Get the corresponding public key
+    const publicKey = secp.secp256k1.getPublicKey(privateKey); // Get the corresponding public key
 
     const address = getAddress(publicKey);
 

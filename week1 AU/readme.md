@@ -1,3 +1,15 @@
+## Deliveredmetal comments on this implementation
+
+Week 1 AU project 
+So for this implementation I first thought about adding a signer client side, but looking it up 
+a bit it seemed risky.
+So then I set it up using an external command line signer such as the one I did in the signer folder.
+But it was clunky to copy the signature from the external program into the signature field.
+Finally I decided to go with MetaMask to handle the signing. The disadvantage is that metamask is needed
+for testing.
+
+Note: I did not unit test this program, nor checked throughly error handing. Is also not commented yet.
+
 ## ECDSA Node
 
 This project is an example of using a client and server to facilitate transfers between different addresses. Since there is just a single server on the back-end handling transfers, this is clearly very centralized. We won't worry about distributed consensus for this project.

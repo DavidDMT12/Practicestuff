@@ -21,7 +21,7 @@ function Transfer({ setBalance , account }) {
         params: [msg, from],
       });
       console.log("inside", sign);
-      setSignedMessage(sign); // Update signed message in state
+      setSignedMessage(sign); 
       console.log("signed inside", sign);
 
       // Perform the server.post call here after setting the signed message
@@ -40,13 +40,12 @@ function Transfer({ setBalance , account }) {
       }
     } catch (err) {
       console.error(err);
-      // Handle error here
     }
   };
 
   const transfer = async (evt) => {
     evt.preventDefault();
-    await handlePersonalSign(); // Wait for handlePersonalSign to complete
+    await handlePersonalSign(); 
   };
 
 

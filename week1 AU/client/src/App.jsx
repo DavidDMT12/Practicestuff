@@ -26,9 +26,9 @@ function App() {
           window.location.reload();
         });
   
-        const address = accounts[0]; // Get the first account from the returned array
+        const address = accounts[0]; 
         const account = ethers.getAddress(address)
-        setAccount(account); // Update the account state
+        setAccount(account);
       } catch (error) {
         console.error(error);
         setShowNoWalletMessage(true);
